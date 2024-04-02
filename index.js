@@ -18,9 +18,9 @@ app.post("/", jsonParser, function (req, res) {
   res.writeHead(200, { "Content-Type": "application/json", mode: "cors" });
 
   //armazena o valor recebido pela rede na variável bit
-  liga = req.body.up;
-  desliga = req.body.down;
-  restart = req.body.left;
+  liga = req.body.liga;
+  desliga = req.body.desliga;
+  restart = req.body.restart;
  
 
   res.end();
