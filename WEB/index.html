@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modbus</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    body::-webkit-scrollbar {
+      display: none; /* Chrome, Safari e Opera */
+    }
+
+    body {
+      -ms-overflow-style: none; /* IE e Edge */
+      scrollbar-width: none; /* Firefox */
+    }
+
+    section { 
+      display: flex;
+      flex-direction: row; /* Alterado para botões ficarem em linha */
+      align-items: center; 
+    }
+
+    .direction-button {  
+      width: 90px; /* Alterado para botões retangulares */
+      height: 60px; /* Alterado para botões retangulares */
+      font-size: 15px; /* Alterado para botões retangulares */
+      background-color: #363636; /* Cor inicial */
+      color: white;
+      border: none;
+      border-radius: 10px; /* Alterado para botões retangulares */
+      cursor: pointer;
+      margin: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .direction-button.clicked {
+      background-color: red !important; /* Importante adicionar !important */
+    }
+
+    .direction-button.disabled {
+      background-color: #777; /* Cor dos botões desativados */
+    }
+
+  </style>
+</head>
+<body>
+  <section>
+    <button id="Liga" class="direction-button" aria-label="Liga">Liga</button>
+    <button id="Restart" class="direction-button" aria-label="Restart">Restart</button>
+    <button id="Desliga" class="direction-button" aria-label="Desliga">Desliga</button>
+  </section>
+
+  <script>
+    var buttons = {
+      liga: 0,
+      desliga: 0,
+      restart: 0
+    };
+
+    var button_Liga = document.getElementById("Liga");
+    var button_Desliga = document.getElementById("Desliga");
+    var button_Restart = document.getElementById("Restart");
+
+    function sendCommand() {
+      fetch('https://modbusgooglesitesrenderraspberryclponrom.onrender.com/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(buttons)
+      })
+    }
+
+    function toggleButton(button, property) {
+      if (buttons[property] === 0) {
+        buttons[property] = 1;
+        button.classList.add("clicked");
+        button.style.backgroundColor = "red"; // Alterar a cor do botão para vermelho
+      } else {
+        buttons[property] = 0;
+        button.classList.remove("clicked");
+        button.style.backgroundColor = "#363636"; // Restaurar a cor inicial
+      }
+
+      // Desativar outros botões
+      for (var prop in buttons) {
+        if (prop !== property) {
+          var otherButton = document.getElementById(prop);
+          otherButton.classList.remove("clicked");
+          otherButton.style.backgroundColor = "#777"; // Cor dos botões desativados
+          buttons[prop] = 0;
+        }
+      }
+
+      
+    }
+
+    button_Liga.addEventListener("click", function() {
+      toggleButton(button_Liga, "Liga");
+      buttons = {
+      liga: 1,
+      desliga: 0,
+      restart: 0
+    };
+      sendCommand();
+    });
+
+    button_Desliga.addEventListener("click", function() {
+      toggleButton(button_Desliga, "Desliga");
+      buttons = {
+      liga: 0,
+      desliga: 1,
+      restart: 0
+    };
+      sendCommand();
+    });
+
+    button_Restart.addEventListener("click", function() {
+      toggleButton(button_Restart, "Restart");
+      buttons = {
+      liga: 0,
+      desliga: 0,
+      restart: 1
+    };
+      sendCommand();
+    });
+  </script>
+</body>
+</html>

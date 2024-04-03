@@ -11,14 +11,11 @@ var restart = 0;
 
 app.post("/", jsonParser, function (req, res) {
   // Define o cabeçalho Content-Type e status de resposta
-  res.setHeader("Content-Type", "application/json");
-  res.status(200);
-
-  // Armazena os valores recebidos na rede
+  res.writeHead(200, { "Content-Type": "application/json", mode: "cors" });
   liga = req.body.liga;
   desliga = req.body.desliga;
   restart = req.body.restart;
-  console.log (liga, desliga, restart)
+  console.log (liga, desliga, restart);
   res.end();
 });
 
