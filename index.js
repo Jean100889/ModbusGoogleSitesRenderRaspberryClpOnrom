@@ -1,42 +1,36 @@
-// npm i express
-const express = require("express"); //importa a framework
-var bodyParser = require("body-parser");
-const app = express(); //atribui o nome da framework ao nome app
-var jsonParser = bodyParser.json();
-
-// npm i cors
-var cors = require("cors");
+const express = require("express");
+const bodyParser = require("body-parser");
+const app = express();
+const jsonParser = bodyParser.json();
+const cors = require("cors");
 app.use(cors());
 
-var liga = 0;
-var desliga = 0;
-var restart = 0;
+let liga = 0;
+let desliga = 0;
+let restart = 0;
 
-
-//usa o express para monitorar a porta 8080 e capturar os requests feitos pelo POST
 app.post("/", jsonParser, function (req, res) {
-  res.writeHead(200, { "Content-Type": "application/json", mode: "cors" });
+  // Define o cabeçalho Content-Type e status de resposta
+  res.setHeader("Content-Type", "application/json");
+  res.status(200);
 
-  //armazena o valor recebido pela rede na variável bit
+  // Armazena os valores recebidos na rede
   liga = req.body.liga;
   desliga = req.body.desliga;
   restart = req.body.restart;
- 
 
   res.end();
 });
 
-app.get("/", jsonParser, function (req, res) {
-  res.writeHead(200, { "Content-Type": "application/json", mode: "cors" });
-  res.write(
-    JSON.stringify({
-      liga: liga,
-      desliga: desliga,
-      restart: restart,
-      
-    }),
-  );
-  res.end();
+app.get("/", function (req, res) {
+  // Retorna os valores armazenados
+  res.json({
+    liga: liga,
+    desliga: desliga,
+    restart: restart,
+  });
 });
 
-app.listen(3000);
+app.listen(3000, () => {
+  console.log("Servidor rodando na porta 3000");
+});
