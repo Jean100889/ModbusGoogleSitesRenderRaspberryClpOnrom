@@ -5,9 +5,9 @@ const jsonParser = bodyParser.json();
 const cors = require("cors");
 app.use(cors());
 
-let liga = 0;
-let desliga = 0;
-let restart = 0;
+var liga = 0;
+var desliga = 0;
+var restart = 0;
 
 app.post("/", jsonParser, function (req, res) {
   // Define o cabeçalho Content-Type e status de resposta
@@ -18,7 +18,7 @@ app.post("/", jsonParser, function (req, res) {
   liga = req.body.liga;
   desliga = req.body.desliga;
   restart = req.body.restart;
-
+  console.log (liga, desliga, restart)
   res.end();
 });
 
@@ -29,6 +29,8 @@ app.get("/", function (req, res) {
     desliga: desliga,
     restart: restart,
   });
+  console.log (liga, desliga, restart)
+  res.end();
 });
 
 app.listen(3000, () => {
